@@ -1,0 +1,42 @@
+<div class="container" style="max-width: 720px; margin: 2rem auto;">
+  <h1>Weather Forecast</h1>
+
+  <%= form_with url: forecasts_path, method: :get, local: true do %>
+    <div style="margin: 1rem 0;">
+      <label for="address">Enter address (e.g. "1600 Pennsylvania Ave NW, Washington, DC 20500")</label><br>
+      <%= text_field_tag :address, @address, id: "address", style: "width: 100%; padding: 0.5rem;" %>
+    </div>
+    <%= submit_tag "Get Forecast", style: "padding: 0.5rem 1rem;" %>
+  <% end %>
+
+  <% if @error_message.present? %>
+    <div style="margin-top: 1rem; color: #b30000;">
+      <strong>Error:</strong> <%= @error_message %>
+    </div>
+  <% end %>
+
+  <% if @result.present? %>
+    <div style="margin-top: 1.5rem; padding: 1rem; border: 1px solid #ddd; border-radius: 8px;">
+      <h2>Forecast</h2>
+      <p><strong>Address:</strong> <%= @result.address %></p>
+      <p><strong>ZIP:</strong> <%= @result.zip || "N/A" %></p>
+      <p><strong>Location:</strong> <%= @result.latitude %>, <%= @result.longitude %></p>
+      <p>
+        <strong>Current Temp (°C):</strong>
+        <%= @result.current_temp_c.nil? ? "N/A" : sprintf("%.1f", @result.current_temp_c) %>
+        <% if @result.from_cache %>
+          <span style="background: #eef; color: #00f; padding: 0.1rem 0.3rem; border-radius: 4px; margin-left: 0.5rem;">cached</span>
+        <% end %>
+      </p>
+      <p>
+        <strong>Today's High (°C):</strong>
+        <%= @result.daily_high_c.nil? ? "N/A" : sprintf("%.1f", @result.daily_high_c) %>
+      </p>
+      <p>
+        <strong>Today's Low (°C):</strong>
+        <%= @result.daily_low_c.nil? ? "N/A" : sprintf("%.1f", @result.daily_low_c) %>
+      </p>
+      <p style="color: #666; font-size: 0.9rem;"><em>Source:</em> <%= @result.source %></p>
+    </div>
+  <% end %>
+</div>
